@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surya | Azure DevOps & Data Engineer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+
+        /* NAV */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(10px);
+        }
+        .logo { font-size: 1.4rem; font-weight: 700; color: #0078d4; }
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #0078d4; }
+
+        /* HERO */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(ellipse at top, #001a33 0%, #0a0a0a 70%);
+        }
+        .badge {
+            background: rgba(0,120,212,0.15);
+            border: 1px solid rgba(0,120,212,0.4);
+            color: #0078d4;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .hero h1 span { color: #0078d4; }
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 600px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+        .btn-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #0078d4;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover { background: #005fa3; transform: translateY(-2px); }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-secondary:hover { border-color: #0078d4; color: #0078d4; }
+
+        /* SKILLS */
+        .section {
+            padding: 80px 60px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .section-subtitle {
+            color: #888;
+            margin-bottom: 48px;
+            font-size: 1rem;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .skill-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+        .skill-card:hover {
+            border-color: #0078d4;
+            transform: translateY(-4px);
+            background: rgba(0,120,212,0.05);
+        }
+        .skill-icon { font-size: 2rem; margin-bottom: 14px; }
+        .skill-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+        .skill-card p { color: #888; font-size: 0.9rem; line-height: 1.6; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .tag {
+            background: rgba(0,120,212,0.1);
+            border: 1px solid rgba(0,120,212,0.2);
+            color: #0078d4;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+        }
+
+        /* PROJECTS */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .project-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+        .project-card:hover {
+            border-color: #0078d4;
+            transform: translateY(-4px);
+        }
+        .project-number {
+            color: #0078d4;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .project-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
+        .project-card p { color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .status.live { background: rgba(0,200,100,0.1); color: #00c864; border: 1px solid rgba(0,200,100,0.2); }
+        .status.building { background: rgba(255,165,0,0.1); color: #ffa500; border: 1px solid rgba(255,165,0,0.2); }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: #555;
+            font-size: 0.9rem;
+        }
+        footer span { color: #0078d4; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Surya | Azure DevOps & Data Engineer</div>
+        <div class="nav-links">
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="https://github.com/Surya-rv05" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="badge">☁️ Azure DevOps & Data Engineer</div>
+        <h1>Building Cloud Infrastructure<br>that <span>Scales & Secures</span></h1>
+        <p>Specializing in Azure DevOps, DevSecOps, and Data Engineering.
+        I build production-grade pipelines, Kubernetes platforms, and
+        data lakehouses on Microsoft Azure.</p>
+        <div class="btn-group">
+            <a href="#projects" class="btn btn-primary">View Projects</a>
+            <a href="https://github.com/Surya-rv05" class="btn btn-secondary" target="_blank">GitHub Profile</a>
+        </div>
+    </section>
+
+    <div class="section" id="skills">
+        <div class="section-title">Technical Skills</div>
+        <div class="section-subtitle">Tools and technologies I work with</div>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-icon">⚙️</div>
+                <h3>DevOps & CI/CD</h3>
+                <p>Building automated pipelines that ship code from commit to production reliably and fast.</p>
+                <div class="tags">
+                    <span class="tag">GitHub Actions</span>
+                    <span class="tag">Azure DevOps</span>
+                    <span class="tag">ArgoCD</span>
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🏗️</div>
+                <h3>Infrastructure as Code</h3>
+                <p>Provisioning and managing cloud infrastructure through version-controlled code.</p>
+                <div class="tags">
+                    <span class="tag">Terraform</span>
+                    <span class="tag">Bicep</span>
+                    <span class="tag">ARM Templates</span>
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🐳</div>
+                <h3>Containers & Kubernetes</h3>
+                <p>Containerizing applications and orchestrating them at scale on AKS.</p>
+                <div class="tags">
+                    <span class="tag">Docker</span>
+                    <span class="tag">Kubernetes</span>
+                    <span class="tag">Helm</span>
+                    <span class="tag">AKS</span>
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🔐</div>
+                <h3>DevSecOps</h3>
+                <p>Embedding security into every stage of the pipeline — shift left security.</p>
+                <div class="tags">
+                    <span class="tag">Trivy</span>
+                    <span class="tag">tfsec</span>
+                    <span class="tag">Key Vault</span>
+                    <span class="tag">Defender</span>
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">📊</div>
+                <h3>Data Engineering</h3>
+                <p>Building end-to-end data pipelines and lakehouses on Azure.</p>
+                <div class="tags">
+                    <span class="tag">Databricks</span>
+                    <span class="tag">PySpark</span>
+                    <span class="tag">Delta Lake</span>
+                    <span class="tag">ADF</span>
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">☁️</div>
+                <h3>Azure Cloud</h3>
+                <p>Deep expertise across Azure compute, networking, storage and security services.</p>
+                <div class="tags">
+                    <span class="tag">AKS</span>
+                    <span class="tag">App Service</span>
+                    <span class="tag">Event Hubs</span>
+                    <span class="tag">Synapse</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="projects">
+        <div class="section-title">Projects</div>
+        <div class="section-subtitle">Real-world Azure projects built to industry standards</div>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-number">PROJECT 01</div>
+                <h3>Portfolio Deployment on Azure</h3>
+                <p>Static site hosted on Azure Blob Storage with CDN, custom domain, HTTPS enforcement, and automated CI/CD via GitHub Actions. Infrastructure provisioned with Bicep.</p>
+                <div class="tags" style="margin-bottom:16px">
+                    <span class="tag">Bicep</span>
+                    <span class="tag">GitHub Actions</span>
+                    <span class="tag">Azure CDN</span>
+                    <span class="tag">Blob Storage</span>
+                </div>
+                <span class="status live">● Live</span>
+            </div>
+            <div class="project-card">
+                <div class="project-number">PROJECT 02</div>
+                <h3>Containerized Microservices on AKS</h3>
+                <p>3-service app deployed on Azure Kubernetes Service with Terraform IaC, Helm charts, GitOps via ArgoCD, autoscaling, and Grafana monitoring dashboards.</p>
+                <div class="tags" style="margin-bottom:16px">
+                    <span class="tag">Terraform</span>
+                    <span class="tag">AKS</span>
+                    <span class="tag">Helm</span>
+                    <span class="tag">ArgoCD</span>
+                </div>
+                <span class="status building">⚡ Building</span>
+            </div>
+            <div class="project-card">
+                <div class="project-number">PROJECT 03</div>
+                <h3>Zero-Trust DevSecOps Pipeline</h3>
+                <p>End-to-end secure pipeline with Trivy container scanning, tfsec IaC analysis, Gitleaks secret detection, and Microsoft Defender for Cloud integration.</p>
+                <div class="tags" style="margin-bottom:16px">
+                    <span class="tag">Trivy</span>
+                    <span class="tag">tfsec</span>
+                    <span class="tag">Gitleaks</span>
+                    <span class="tag">Defender</span>
+                </div>
+                <span class="status building">⚡ Building</span>
+            </div>
+            <div class="project-card">
+                <div class="project-number">PROJECT 04</div>
+                <h3>Azure Lakehouse Analytics Platform</h3>
+                <p>End-to-end data platform with Event Hubs ingestion, Data Lake Gen2 Medallion Architecture, Databricks PySpark processing, Synapse Analytics and Power BI dashboard.</p>
+                <div class="tags" style="margin-bottom:16px">
+                    <span class="tag">Databricks</span>
+                    <span class="tag">Delta Lake</span>
+                    <span class="tag">Synapse</span>
+                    <span class="tag">Power BI</span>
+                </div>
+                <span class="status building">⚡ Building</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built & deployed on <span>Microsoft Azure</span> · Infrastructure as Code with Bicep · CI/CD via GitHub Actions</p>
+    </footer>
+
+</body>
+</html>
