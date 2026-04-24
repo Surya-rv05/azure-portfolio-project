@@ -133,17 +133,17 @@ az storage blob upload --account-name YOUR_STORAGE_NAME --container-name '$web' 
 
 ---
 
-## 📚 What I Learned
+## 📚 Technical Highlights
 
-- Writing Azure infrastructure as code with **Bicep**
-- Deploying and configuring **Azure Blob Storage** for static website hosting
-- Building **GitHub Actions CI/CD pipelines** with multi-step jobs
-- Managing **Azure authentication** securely using Service Principals
-- **Git branching and commit strategies** for professional workflows
+- Production-grade Azure infrastructure provisioned via **Bicep** IaC
+- **Azure Blob Storage** static website hosting with HTTPS enforcement
+- Multi-stage **GitHub Actions CI/CD** pipelines with automated deployment
+- Secure **Azure authentication** using Service Principal with least-privilege RBAC
+- Conventional commit workflows with proper **Git branching strategies**
 
 ---
 
-## 🗺️ Part of My Azure Learning Journey
+## 🎯 Related Projects
 
 | Project | Description | Status |
 |---|---|---|
