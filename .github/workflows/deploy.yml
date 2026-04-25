@@ -2,17 +2,15 @@
 # Project 1 — Portfolio CI/CD Pipeline
 # Author: Surya
 # Description: Auto-deploy portfolio to Azure
-#              Blob Storage on every push to main
+#              with Entra ID authentication
 # =============================================
 
 name: Deploy Portfolio to Azure
 
-# Trigger — runs on every push to main branch
 on:
   push:
     branches:
       - main
-  # Also allows manual trigger from GitHub UI
   workflow_dispatch:
 
 jobs:
@@ -21,25 +19,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1 — Checkout the code
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
-      # Step 2 — Login to Azure using our secret
       - name: 🔐 Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Step 3 — Enable static website hosting
       - name: ⚙️ Enable Static Website Hosting
         run: |
           az storage blob service-properties update \
             --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} \
             --static-website \
-            --index-document index.html
+            --index-document index.html \
+            --auth-mode login
 
-      # Step 4 — Upload website files to Azure
       - name: 🚀 Deploy to Azure Blob Storage
         run: |
           az storage blob upload \
@@ -48,9 +43,9 @@ jobs:
             --name index.html \
             --file src/index.html \
             --content-type 'text/html' \
-            --overwrite true
+            --overwrite true \
+            --auth-mode login
 
-      # Step 5 — Print the live URL
       - name: 🌐 Print Live URL
         run: |
           echo "✅ Portfolio is live at:"
