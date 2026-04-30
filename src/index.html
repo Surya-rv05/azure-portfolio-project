@@ -11,7 +11,7 @@
 
   <!-- Azure Application Insights -->
   <script type="text/javascript">
-  !function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:new Date().toISOString(),iKey:d.instrumentationKey,name:"Microsoft.ApplicationInsights."+a.replace(/ /g,"")+"."+e,sampleRate:100,tags:n,data:{baseType:t+"Data",baseData:{ver:2}}}}var h=d.url||y.src;if(h){var a=T.createElement(k);a.type="text/javascript",a[w]="anonymous",a.async=!0,a.src=h;var c=T.getElementsByTagName(k)[0];c?c.parentNode.insertBefore(a,c):T.head.appendChild(a)}}.apply(null,[]);T[t]=n;n.queue&&n.queue.length===0&&n.trackPageView({})}(window,document,{
+  !function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:new Date().toISOString(),iKey:d.instrumentationKey,name:"Microsoft.ApplicationInsights."+a.replace(/ /g,"")+"."+e,sampleRate:100,tags:n,data:{baseType:t+"Data",baseData:{ver:2}}}}var h=d.url||y.src;if(h){var a=T.createElement(k);a.type="text/javascript",a[w]="anonymous",a.async=!0,a.src=h;var c=T.getElementsByTagName(k)[0];c?c.parentNode.insertBefore(a,c):T.head.appendChild(a)}m.queue.push(function(){if(!g){g=!0;var e=T.createElement(k);e.src=h,e[w]="anonymous",e.async=!0,T.head.appendChild(e)}});T[t]=m;return m}.apply(null,[]);T[t]=n;n.queue&&n.queue.length===0&&n.trackPageView({})}(window,document,{
     src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js",
     connectionString: "InstrumentationKey=7f759e13-4619-4fc8-bd5b-ee78698ff795;IngestionEndpoint=https://centralindia-0.in.applicationinsights.azure.com/;LiveEndpoint=https://centralindia.livediagnostics.monitor.azure.com/;ApplicationId=d9f14338-6f8e-4009-bd39-2db0f194165b"
   });
@@ -1708,71 +1708,38 @@
   });
 
   // ─── VISITOR COUNTER ───
-  // Wait for App Insights to load then query metrics
-  function formatNumber(n) {
-    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-    return n.toString();
-  }
-
-  function updateVisitorCount() {
-    // Use sessionStorage to track unique visitors client-side
-    const isUnique = !sessionStorage.getItem('visited');
-    if (isUnique) sessionStorage.setItem('visited', '1');
-
-    // Track with App Insights
-    if (window.appInsights) {
-      window.appInsights.trackEvent({ name: 'PageVisit' });
-      if (isUnique) {
-        window.appInsights.trackEvent({ name: 'UniqueVisit' });
-      }
+  (function() {
+    function formatNumber(n) {
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+      return n.toString();
     }
 
-    // Query App Insights REST API for counts
-    const connStr = document.querySelector('script[type="text/javascript"]')?.textContent || '';
-    const instrKeyMatch = connStr.match(/InstrumentationKey=([^;]+)/);
+    // Total visits — increment every page load
+    const total = parseInt(localStorage.getItem('sv_total') || '0') + 1;
+    localStorage.setItem('sv_total', total);
 
-    if (!instrKeyMatch) return;
+    // Unique visitors — tracked by unique browser ID
+    let uid = localStorage.getItem('sv_uid');
+    if (!uid) {
+      uid = Date.now().toString(36) + Math.random().toString(36).slice(2);
+      localStorage.setItem('sv_uid', uid);
+    }
+    let uniqueIds = JSON.parse(localStorage.getItem('sv_unique_ids') || '[]');
+    if (!uniqueIds.includes(uid)) uniqueIds.push(uid);
+    localStorage.setItem('sv_unique_ids', JSON.stringify(uniqueIds));
 
-    const appId = instrKeyMatch[1];
-    const apiUrl = `https://api.applicationinsights.io/v1/apps/${appId}/metrics/`;
-    const headers = { 'x-api-key': '' }; // Will use public read endpoint
+    // Update display
+    document.getElementById('total-visits').textContent = formatNumber(total);
+    document.getElementById('unique-visitors').textContent = formatNumber(uniqueIds.length);
 
-    // Fetch total page views
-    fetch(`https://api.applicationinsights.io/v1/apps/${appId}/query?query=pageViews%7Ccount()`, {
-      headers: { 'x-api-key': '' }
-    })
-    .then(r => r.json())
-    .then(data => {
-      const total = data?.tables?.[0]?.rows?.[0]?.[0] || 0;
-      document.getElementById('total-visits').textContent = formatNumber(total);
-    })
-    .catch(() => {
-      // Fallback — show live incrementing local count
-      const count = parseInt(localStorage.getItem('totalVisits') || '0') + 1;
-      localStorage.setItem('totalVisits', count);
-      document.getElementById('total-visits').textContent = formatNumber(count);
+    // Also track in App Insights for your portal analytics
+    window.addEventListener('load', () => {
+      if (window.appInsights) {
+        window.appInsights.trackPageView({ name: 'Portfolio Visit' });
+        window.appInsights.trackMetric({ name: 'TotalVisits', average: total });
+      }
     });
-
-    // Fetch unique visitors
-    fetch(`https://api.applicationinsights.io/v1/apps/${appId}/query?query=pageViews%7Csummarize%20dcount(session_Id)`, {
-      headers: { 'x-api-key': '' }
-    })
-    .then(r => r.json())
-    .then(data => {
-      const unique = data?.tables?.[0]?.rows?.[0]?.[0] || 0;
-      document.getElementById('unique-visitors').textContent = formatNumber(unique);
-    })
-    .catch(() => {
-      const unique = parseInt(localStorage.getItem('uniqueVisitors') || '0') + (isUnique ? 1 : 0);
-      localStorage.setItem('uniqueVisitors', unique);
-      document.getElementById('unique-visitors').textContent = formatNumber(unique);
-    });
-  }
-
-  // Run after page loads
-  window.addEventListener('load', () => {
-    setTimeout(updateVisitorCount, 1500);
-  });
+  })();
 </script>
 </body>
 </html>
