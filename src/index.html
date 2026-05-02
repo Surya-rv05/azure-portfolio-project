@@ -8,14 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-
-  <!-- Azure Application Insights -->
-  <script type="text/javascript">
-  !(function (cfg){function e(){cfg.onInit&&cfg.onInit(n)}var x,w,D,t,E,P,p=document,u=window,o="script",H="ingestionendpoint",q="disableExceptionTracking",G="ai.device.",K="toLowerCase",Q=cfg.connectionString,M=cfg.instrumentationKey,k=cfg.endpointUrl||"https://dc.services.visualstudio.com/v2/track";try{var a=Q.match(/IngestionEndpoint=([^;]+)/i);k=(a?a[1]:k).replace(/\/+$/,"")+"/v2/track"}catch(l){}var n={version:"5",config:cfg,initialize:!0,queue:[],_onerror:function(e){u.console&&console.error&&console.error("ApplicationInsights Error",e)},trackPageView:function(e){this.track("Microsoft.ApplicationInsights."+("Browser").replace(/ /g,"")+".Pageview",{ver:2,name:e&&e.name||p.title,url:e&&e.url||u.location&&u.location.href,duration:e&&e.duration||0,id:e&&e.id||"",properties:e&&e.properties||{},measurements:e&&e.measurements||{}})},trackEvent:function(e){this.track("Microsoft.ApplicationInsights."+("Browser").replace(/ /g,"")+".Event",{ver:2,name:e&&e.name||"",properties:e&&e.properties||{},measurements:e&&e.measurements||{}})},trackMetric:function(e){this.track("Microsoft.ApplicationInsights."+("Browser").replace(/ /g,"")+".Metric",{ver:2,metrics:[{name:e.name,value:e.average}]})},track:function(e,t){var n={time:new Date().toISOString(),iKey:M,name:e,data:{baseType:e.split(".").pop()+"Data",baseData:t}};try{var r=new XMLHttpRequest;r.open("POST",k,!0),r.setRequestHeader("Content-type","application/json"),r.send(JSON.stringify([n]))}catch(e){}}};try{var s=p.createElement(o);s.src="https://js.monitor.azure.com/scripts/b/ai.2.min.js";s.crossOrigin="anonymous";s.async=!0;s.onload=function(){if(u.appInsights&&u.appInsights.queue){for(var e=0;e<n.queue.length;e++)u.appInsights.queue.push(n.queue[e]);n.queue=u.appInsights.queue}u.appInsights=u.appInsights||n;e()};s.onerror=function(){u.appInsights=n;e()};var c=p.getElementsByTagName(o)[0];c?c.parentNode.insertBefore(s,c):p.head.appendChild(s)}catch(l){u.appInsights=n;e()}u.appInsights=u.appInsights||n}({
-    connectionString: "InstrumentationKey=7f759e13-4619-4fc8-bd5b-ee78698ff795;IngestionEndpoint=https://centralindia-0.in.applicationinsights.azure.com/;LiveEndpoint=https://centralindia.livediagnostics.monitor.azure.com/;ApplicationId=d9f14338-6f8e-4009-bd39-2db0f194165b",
-    instrumentationKey: "7f759e13-4619-4fc8-bd5b-ee78698ff795"
-  });
-  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -831,46 +823,6 @@
       color: var(--text-faint);
     }
     .footer-text span { color: var(--cyan); }
-    .visitor-counter {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .visitor-stat {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      background: var(--surface2);
-      border: 1px solid var(--border-accent);
-      padding: 0.55rem 1.1rem;
-      border-radius: 20px;
-      transition: all 0.2s;
-    }
-    .visitor-stat:hover {
-      border-color: var(--cyan);
-      box-shadow: 0 0 16px rgba(0,212,255,0.15);
-      transform: translateY(-2px);
-    }
-    .visitor-stat-icon {
-      font-size: 1.1rem;
-      filter: drop-shadow(0 0 6px rgba(0,212,255,0.6));
-    }
-    .visitor-stat-value {
-      color: var(--cyan);
-      font-weight: 700;
-      font-size: 0.92rem;
-      text-shadow: 0 0 10px rgba(0,212,255,0.5);
-    }
-    .visitor-stat-label {
-      color: var(--text-dim);
-      letter-spacing: 0.04em;
-    }
 
     /* ─── ANIMATIONS ─── */
     @keyframes fadeUp {
@@ -1557,19 +1509,6 @@
 </section>
 
 <footer>
-  <!-- Visitor Counter -->
-  <div class="visitor-counter">
-    <div class="visitor-stat">
-      <span class="visitor-stat-icon">👁️</span>
-      <span class="visitor-stat-label">Total Visits</span>
-      <span class="visitor-stat-value" id="total-visits">—</span>
-    </div>
-    <div class="visitor-stat">
-      <span class="visitor-stat-icon">🧑</span>
-      <span class="visitor-stat-label">Unique Visitors</span>
-      <span class="visitor-stat-value" id="unique-visitors">—</span>
-    </div>
-  </div>
   <div class="footer-text">
     built with <span>azure blob storage</span> · deployed via <span>github actions</span> · infrastructure as <span>bicep</span>
     <br style="margin-bottom:0.4rem"/>
@@ -1707,39 +1646,7 @@
     });
   });
 
-  // ─── VISITOR COUNTER ───
-  (function() {
-    function formatNumber(n) {
-      if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-      return n.toString();
-    }
 
-    // Total visits — increment every page load
-    const total = parseInt(localStorage.getItem('sv_total') || '0') + 1;
-    localStorage.setItem('sv_total', total);
-
-    // Unique visitors — tracked by unique browser ID
-    let uid = localStorage.getItem('sv_uid');
-    if (!uid) {
-      uid = Date.now().toString(36) + Math.random().toString(36).slice(2);
-      localStorage.setItem('sv_uid', uid);
-    }
-    let uniqueIds = JSON.parse(localStorage.getItem('sv_unique_ids') || '[]');
-    if (!uniqueIds.includes(uid)) uniqueIds.push(uid);
-    localStorage.setItem('sv_unique_ids', JSON.stringify(uniqueIds));
-
-    // Update display
-    document.getElementById('total-visits').textContent = formatNumber(total);
-    document.getElementById('unique-visitors').textContent = formatNumber(uniqueIds.length);
-
-    // Also track in App Insights for your portal analytics
-    window.addEventListener('load', () => {
-      if (window.appInsights) {
-        window.appInsights.trackPageView({ name: 'Portfolio Visit' });
-        window.appInsights.trackMetric({ name: 'TotalVisits', average: total });
-      }
-    });
-  })();
 </script>
 </body>
 </html>
